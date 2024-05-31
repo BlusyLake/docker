@@ -1,0 +1,205 @@
+3.8"
+
+# 1 - Execute o comando : bundle exec rails db:chatwoot_prepare apos subir stack
+
+# 2 - Antes de subir a STACK, faça o apontamento do DNS para o  dominio (nginx).
+
+services:
+
+  postgres:
+
+    image: postgres:12
+
+    restart: always
+
+    networks:
+
+      - chatwoot_network
+
+    ports:
+
+      - '127.0.0.1:5432:5432'
+
+    volumes:
+
+      - /chatwoot/postgres:/var/lib/postgresql/data
+
+    environment:
+
+      - POSTGRES_DB=chatwoot
+
+      - POSTGRES_USER=postgres
+
+      # Please provide your own password.
+
+      - POSTGRES_PASSWORD=123@mudar 
+
+  redis:
+
+    image: redis:alpine
+
+    restart: always
+
+    #command: ["sh", "-c", "redis-server --requirepass \"$REDIS_PASSWORD\""]
+
+    #environment:
+
+    #   - REDIS_PASSWORD=
+
+    volumes:
+
+      - /chatwoot/redis:/data
+
+    networks:
+
+      - chatwoot_network
+
+    ports:
+
+      - '127.0.0.1:6379:6379'
+
+ 
+
+  #serviço principal do front chatwoot  
+
+  chatwoot_front:
+
+    image: chatwoot/chatwoot:v3.7.0
+
+    restart: unless-stopped
+
+    #command: bundle exec rails s -p 3000 -b 0.0.0.0
+
+    command: bundle exec rails db:chatwoot_prepare
+
+    entrypoint: docker/entrypoints/rails.sh
+
+    volumes:
+
+      - /chatwoot/chatwoot_data:/app/storage
+
+    networks:
+
+      - chatwoot_network
+
+    ports:
+
+      - '127.0.0.1:3001:3000'
+
+    environment:
+
+      INSTALLATION_NAME: PMVC
+
+      NODE_ENV: production
+
+      RAILS_ENV: production
+
+      INSTALLATION_ENV: docker
+
+      SECRET_KEY_BASE: 123@mudar
+
+      FRONTEND_URL: http://127.0.0.1
+
+      DEFAULT_LOCALE: pt_BR
+
+      FORCE_SSL: "false"
+
+      ENABLE_ACCOUNT_SIGNUP: "false"
+
+      REDIS_URL: redis://redis:6379
+
+      #REDIS_PASSWORD: 
+
+      # Banco de dados
+
+      POSTGRES_HOST: postgres
+
+      POSTGRES_USERNAME: postgres
+
+      POSTGRES_PASSWORD: 123@mudar
+
+      POSTGRES_DATABASE: chatwoot
+
+      # Armazenamento
+
+      ACTIVE_STORAGE_SERVICE: local
+
+      # logs
+
+      RAILS_LOG_TO_STDOUT: "true"
+
+      # Avatar Bot
+
+      USE_INBOX_AVATAR_FOR_BOT: "true"
+
+    
+
+  #worker
+
+  chatwoot_worker:
+
+    image: chatwoot/chatwoot:v3.7.0
+
+    restart: unless-stopped
+
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+    volumes:
+
+      - /chatwoot/chatwoot_data:/app/storage
+
+    networks:
+
+      - chatwoot_network
+
+    environment:
+
+      INSTALLATION_NAME: PMVC
+
+      NODE_ENV: production
+
+      RAILS_ENV: production
+
+      INSTALLATION_ENV: docker
+
+      SECRET_KEY_BASE: 123@mudar
+
+      FRONTEND_URL: http://127.0.0.1
+
+      DEFAULT_LOCALE: pt_BR
+
+      FORCE_SSL: "true"
+
+      ENABLE_ACCOUNT_SIGNUP: "false"
+
+      REDIS_URL: redis://redis:6379
+
+      #REDIS_PASSWORD: 
+
+      # Banco de dados
+
+      POSTGRES_HOST: postgres
+
+      POSTGRES_USERNAME: postgres
+
+      POSTGRES_PASSWORD: 123@mudar
+
+      POSTGRES_DATABASE: chatwoot
+
+      # Armazenamento
+
+      ACTIVE_STORAGE_SERVICE: local
+
+      # logs
+
+      RAILS_LOG_TO_STDOUT: "true"
+
+      # Avatar Bot
+
+      USE_INBOX_AVATAR_FOR_BOT: "true"
+
+networks:
+
+  chatwoot_network:
+
+    external: true

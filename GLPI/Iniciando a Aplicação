@@ -1,0 +1,5 @@
+docker run --name db-glpi-10 --network glpi -e MYSQL_ROOT_PASSWORD=ADM@MySQL_GLP1 -e MYSQL_DATABASE=glpi -e MYSQL_USER=glpi -e MYSQL_PASSWORD=GLP1_MySQL@10 -e TZ=America/Sao_Paulo -v /data/glpi-10/percona/lib/:/var/lib/mysql -v /data/glpi-10/percona/log/:/var/log/mysql -v /data/glpi-10/backup/:/backup -d percona/percona-server:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+
+
+
+docker run --name glpi-10 --network glpi -p 80:80 -v /data/glpi-10/glpi/documents:/var/lib/glpi/files/data-documents -v /data/glpi-10/glpi/marketplace:/var/lib/glpi/marketplace -v /data/glpi-10/glpi/imagens-custom:/usr/share/glpi/pics/imagens-custom -v /data/glpi-10/glpi/marketplace:/usr/share/glpi/marketplace -v /data/glpi-10/glpi/plugins:/usr/share/glpi/plugins -v /data/glpi-10/glpi/files/_pictures:/var/lib/glpi/files/_pictures -v /data/glpi-10/glpi/files/_plugins:/var/lib/glpi/files/_plugins -v /data/glpi-10/glpi/etc:/etc/glpi/ -v /data/glpi-10/backup:/backup/ -d sdbrasil/glpi:10.0.15

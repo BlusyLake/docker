@@ -1,1 +1,5 @@
 sdbrasil/glpi:10.0.15
+
+#criando a network
+
+docker network create glpi

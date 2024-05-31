@@ -1,0 +1,2 @@
+mkdir -p /data/glpi-10/percona/lib
+mkdir -p /data/glpi-10/percona/log

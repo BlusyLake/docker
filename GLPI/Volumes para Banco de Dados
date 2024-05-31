@@ -1,2 +1,5 @@
 mkdir -p /data/glpi-10/percona/lib
 mkdir -p /data/glpi-10/percona/log
+
+chown 70:70 -R /data/glpi-10/glpi
+chown 1001:0 -R /data/glpi-10/percona

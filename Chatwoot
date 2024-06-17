@@ -1,4 +1,4 @@
-3.8"
+version: "3.8"
 
 # 1 - Execute o comando : bundle exec rails db:chatwoot_prepare apos subir stack
 
